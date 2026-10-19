@@ -96,6 +96,8 @@ journalctl --user -u prs-panel -f
   mini şeritte ▣ / tam modda "küçült –".
 - **Taşıma:** üstteki tutamak, **Alt + sol tık + sürükle** veya
   **orta tuşla sürükle**.
+- **Konum:** widget son konumunu hatırlar (`widget-pos.txt`); kapanıp
+  açılınca aynı yerde açılır.
 - **Ayarlar:** ⚙ ikonu veya `s` tuşu.
 - **Kapat:** sağ tık → Kapat, `Esc` / `q`.
 
