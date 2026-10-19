@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PRS-T1 e-Panel için küçük masaüstü widget'ı.
+DeskHUD — küçük masaüstü HUD widget'ı.
 
 GTK3 + WebKit2 ile panoyu küçük, çerçevesiz, üstte duran bir pencerede gösterir.
 Üç mod vardır:

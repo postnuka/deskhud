@@ -1,5 +1,5 @@
 [Unit]
-Description=InkDeck (e-ink panel + desktop widget)
+Description=DeskHUD (desktop HUD widget + optional e-ink panel)
 After=graphical-session.target network-online.target
 
 [Service]

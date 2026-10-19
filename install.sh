@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# InkDeck kurulum betiği
+# DeskHUD kurulum betiği
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
-echo "InkDeck kuruluyor: $DIR"
+echo "DeskHUD kuruluyor: $DIR"
 
 command -v python3 >/dev/null || { echo "HATA: python3 bulunamadı"; exit 1; }
 for c in openrgb playerctl; do
@@ -29,8 +29,8 @@ mkdir -p "$HOME/.config/autostart"
 cat > "$HOME/.config/autostart/prs-widget.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Name=InkDeck Widget
-Comment=InkDeck e-ink panel desktop widget
+Name=DeskHUD Widget
+Comment=DeskHUD e-ink panel desktop widget
 Exec=/usr/bin/python3 "$DIR/widget.py"
 Terminal=false
 X-GNOME-Autostart-enabled=true

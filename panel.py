@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PRS-T1 e-mürekkep panosu.
+DeskHUD — masaüstü HUD widget'ı + opsiyonel e-mürekkep pano.
 
 Tek bir HTTP sunucusu:
-  /                     -> saat + tarih + hava + sistem durumu + kontrol butonları
-  /do?action=<eylem>    -> bir kontrol eylemi çalıştırır, sonra panoya döner
+  /                     -> e-mürekkep tam sayfa (mono)
+  /widget               -> masaüstü widget (temalı)
+  /mini                 -> mini şerit (temalı)
+  /settings             -> ayar sayfası
+  /api/state            -> JSON durum (cpu, ram, gpu, vram, temp, level)
+  /do?action=<eylem>    -> kontrol eylemi çalıştırır, geri döner
   /stats                -> JSON (hata ayıklama)
 
-E-mürekkep ve eski Android 2.2 tarayıcısı için tasarlandı:
-  * yalnızca basit HTML/CSS (tablo tabanlı, flexbox/grid yok)
-  * yüksek kontrast, büyük yazı, 800x600 hedefi
-  * HTTPS yok, düz HTTP (yerel ağ)
-
+E-mürekkep ve eski Android 2.2 tarayıcısı için sade HTML/CSS kullanılır.
 Harici kütüphane gerekmez (yalnızca Python standart kütüphanesi).
 """
 import json

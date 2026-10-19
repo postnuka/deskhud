@@ -1,16 +1,16 @@
-# InkDeck
+# DeskHUD
 
-Eski bir **Sony PRS-T1** e-kitap okuyucuyu **e-mürekkep panoya**, aynı panoyu da
-**Ubuntu (GNOME) masaüstünde küçük bir widget'a** çeviren proje.
+**Ubuntu (GNOME) masaüstü için küçük, her zaman üstte duran bir HUD widget'ı.**
+Saat, hava durumu, CPU/RAM/GPU/VRAM/sıcaklık gösterir; klavye ve fare RGB'sini,
+medyayı ve ışıkları kontrol eder. Temalar (LCARS dahil) ve yük altında renk
+değiştiren arayüz destekler.
 
-Wi-Fi üzerinden çalışır: saat, hava durumu, CPU/RAM/GPU/VRAM/sıcaklık gösterir;
-klavye ve fare RGB'sini, medyayı ve ışıkları kontrol eder. Temalar (LCARS dahil)
-ve yük altında renk değiştiren arayüz destekler.
+Aynı panoyu eski bir **Sony PRS-T1** üzerinde **e-mürekkep ekran** olarak da
+açabilirsiniz — ama projenin ana odağı masaüstü widget'ı.
 
 ## Özellikler
 
-- **E-mürekkep pano** — PRS-T1'in eski tarayıcısına uygun sade HTML
-- **Masaüstü widget'ı** — çerçevesiz, üstte duran, sürüklenebilir
+- **Masaüstü HUD widget'ı** — çerçevesiz, üstte duran, sürüklenebilir
 - **3 mod** — tam (340×264), mini (430×44), ayarlar (360×640)
 - **6 tema** — Mono, LCARS, Amber, Matrix, Nord, Sunset
 - **Metrikler** — CPU, RAM, GPU, VRAM, sıcaklık, disk
@@ -20,6 +20,7 @@ ve yük altında renk değiştiren arayüz destekler.
 - **RGB senkronu** — klavye/fare rengi temaya ve uyarıya uyar (OpenRGB)
 - **Medya kontrolü** (playerctl), ışık aç/kapat
 - **Ayar sayfası** — tüm seçimler kalıcı (`state.json`)
+- **Opsiyonel e-mürekkep pano** — PRS-T1'in eski tarayıcısına uygun sade HTML
 
 ## Gereksinimler
 
@@ -31,8 +32,8 @@ ve yük altında renk değiştiren arayüz destekler.
 ## Hızlı başlangıç
 
 ```bash
-git clone https://github.com/postnuka/inkdeck.git
-cd inkdeck
+git clone https://github.com/postnuka/deskhud.git
+cd deskhud
 cp config.example.json config.json   # şehir/koordinatları düzenleyin
 ./install.sh
 ```
