@@ -37,7 +37,7 @@ import gi  # noqa: E402
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 gi.require_version("WebKit2", "4.1")
-from gi.repository import Gdk, Gtk, WebKit2  # noqa: E402
+from gi.repository import Gdk, GLib, Gtk, WebKit2  # noqa: E402
 
 BASE = os.environ.get("EPANEL_BASE", "http://127.0.0.1:8787")
 WIDTH = int(os.environ.get("EPANEL_WIDTH", "340"))
@@ -50,6 +50,7 @@ MINI_HANDLE_H = 4
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODE_FILE = os.path.join(HERE, "widget-mode.txt")
+POS_FILE = os.path.join(HERE, "widget-pos.txt")
 
 URLS = {"full": "/widget", "mini": "/mini", "settings": "/settings"}
 
@@ -69,6 +70,23 @@ def save_mode(mode):
     try:
         with open(MODE_FILE, "w", encoding="utf-8") as f:
             f.write(mode)
+    except Exception:
+        pass
+
+
+def load_pos():
+    try:
+        with open(POS_FILE, "r", encoding="utf-8") as f:
+            parts = f.read().strip().split(",")
+        return int(parts[0]), int(parts[1])
+    except Exception:
+        return None
+
+
+def save_pos(x, y):
+    try:
+        with open(POS_FILE, "w", encoding="utf-8") as f:
+            f.write(f"{int(x)},{int(y)}")
     except Exception:
         pass
 
@@ -125,10 +143,14 @@ class Widget(Gtk.Window):
         self.add(box)
 
         self.connect("map-event", self.on_map)
-        self.connect("destroy", Gtk.main_quit)
+        self.connect("configure-event", self.on_configure)
+        self.connect("destroy", self.on_destroy)
         self.connect("key-press-event", self.on_key)
 
         self._drag = None
+        self._ready = False
+        self._restored = False
+        self._save_timer = None
         self.handle.set_size_request(-1, self._handle_h())
         self.grip.set_visible(self.mode != "mini")
         self._apply_size()
@@ -192,12 +214,57 @@ class Widget(Gtk.Window):
             self.set_mode("settings")
 
     def on_map(self, *_):
-        display = Gdk.Display.get_default()
-        monitor = display.get_primary_monitor() or display.get_monitor(0)
-        geo = monitor.get_geometry()
-        w, h = self._dims()
-        self.move(geo.x + geo.width - w - 30, geo.y + 40)
+        if not self._restored:
+            pos = load_pos()
+            if pos and self._pos_on_screen(pos):
+                self.move(pos[0], pos[1])
+            else:
+                display = Gdk.Display.get_default()
+                monitor = display.get_primary_monitor() or display.get_monitor(0)
+                geo = monitor.get_geometry()
+                w, h = self._dims()
+                self.move(geo.x + geo.width - w - 30, geo.y + 40)
+            self._restored = True
+            GLib.idle_add(self._mark_ready)
         return False
+
+    def _mark_ready(self):
+        self._ready = True
+        return False
+
+    def _pos_on_screen(self, pos):
+        x, y = pos
+        display = Gdk.Display.get_default()
+        for i in range(display.get_n_monitors()):
+            geo = display.get_monitor(i).get_geometry()
+            if (geo.x - 40 <= x <= geo.x + geo.width - 40 and
+                    geo.y - 30 <= y <= geo.y + geo.height - 30):
+                return True
+        return False
+
+    def on_configure(self, widget, event):
+        if not self._ready:
+            return False
+        if self._save_timer is None:
+            self._save_timer = GLib.timeout_add(500, self._save_timer_cb)
+        return False
+
+    def _save_timer_cb(self):
+        self._save_timer = None
+        try:
+            x, y = self.get_position()
+            save_pos(x, y)
+        except Exception:
+            pass
+        return False
+
+    def on_destroy(self, *_):
+        try:
+            x, y = self.get_position()
+            save_pos(x, y)
+        except Exception:
+            pass
+        Gtk.main_quit()
 
     # --- sürükleme ---
     def on_press(self, widget, event):

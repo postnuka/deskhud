@@ -4,4 +4,5 @@ config.json
 state.json
 access.log
 widget-mode.txt
+widget-pos.txt
 widget-debug.log
