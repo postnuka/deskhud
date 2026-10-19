@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+config.json
+state.json
+access.log
+widget-mode.txt
+widget-debug.log

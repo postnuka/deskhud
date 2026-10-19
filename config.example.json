@@ -1,0 +1,13 @@
+{
+  "port": 8787,
+  "city": "İstanbul",
+  "latitude": 41.0082,
+  "longitude": 28.9784,
+  "timezone": "Europe/Istanbul",
+  "refresh_seconds": 60,
+  "rgb_on_color": "00B4FF",
+  "openrgb": {
+    "keyboard": 2,
+    "mouse": 1
+  }
+}
