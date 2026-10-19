@@ -1058,11 +1058,21 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, "Bulunamadı")
 
 
+class Server(ThreadingHTTPServer):
+    def handle_error(self, request, client_address):
+        # Tarayıcı bağlantıyı kapatınca oluşan zararsız hataları yut
+        import sys
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (BrokenPipeError, ConnectionResetError)):
+            return
+        super().handle_error(request, client_address)
+
+
 def main():
     # CPU ölçümü için ilk örneği al
     cpu_percent()
-    httpd = ThreadingHTTPServer(("0.0.0.0", CFG["port"]), Handler)
-    print(f"e-Panel çalışıyor: http://0.0.0.0:{CFG['port']}/  (şehir: {CFG['city']})")
+    httpd = Server(("0.0.0.0", CFG["port"]), Handler)
+    print(f"DeskHUD çalışıyor: http://0.0.0.0:{CFG['port']}/  (şehir: {CFG['city']})")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
