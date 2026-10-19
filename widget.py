@@ -230,6 +230,11 @@ class Widget(Gtk.Window):
 
     def _mark_ready(self):
         self._ready = True
+        try:
+            x, y = self.get_position()
+            save_pos(x, y)
+        except Exception:
+            pass
         return False
 
     def _pos_on_screen(self, pos):
