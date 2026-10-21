@@ -39,7 +39,8 @@ cp config.example.json config.json   # şehir/koordinatları düzenleyin
 ```
 
 - Pano: <http://127.0.0.1:8787/>
-- Widget: oturum açılışında otomatik; elle `python3 widget.py`
+- Widget: `deskhud-widget.service` ile otomatik başlar; elle:
+  `systemctl --user restart deskhud-widget`
 - Ayarlar: <http://127.0.0.1:8787/settings>
 
 ## Çalıştırma
@@ -72,14 +73,18 @@ OpenRGB indeksleri: `openrgb --list-devices`
 
 `install.sh` şunları yapar:
 
-- `prs-panel.service` dosyasını `~/.config/systemd/user/` altına kurar,
-- `~/.config/autostart/prs-widget.desktop` oluşturur.
+- `prs-panel.service` (pano sunucusu) ve `deskhud-widget.service` (widget)
+  dosyalarını `~/.config/systemd/user/` altına kurar,
+- iki servisi de etkinleştirip başlatır,
+- eski autostart kaydını kaldırır.
 
-Elle:
+Widget servisi çökerse **otomatik yeniden başlar**. Elle:
 
 ```bash
 systemctl --user status prs-panel
+systemctl --user status deskhud-widget
 journalctl --user -u prs-panel -f
+journalctl --user -u deskhud-widget -f
 ```
 
 ## PRS-T1 tarafı
@@ -99,7 +104,7 @@ journalctl --user -u prs-panel -f
 - **Konum:** widget son konumunu hatırlar (`widget-pos.txt`); kapanıp
   açılınca aynı yerde açılır.
 - **Ayarlar:** ⚙ ikonu veya `s` tuşu.
-- **Kapat:** sağ tık → Kapat, `Esc` / `q`.
+- **Kapat:** sağ tık → Kapat veya `Ctrl+Q`.
 
 ## Temalar, uyarılar ve RGB
 
@@ -129,7 +134,8 @@ journalctl --user -u prs-panel -f
 - `panel.py` — HTTP sunucusu ve sayfalar
 - `widget.py` — GTK3 + WebKit2 masaüstü widget'ı
 - `config.example.json` — örnek ayarlar
-- `prs-panel.service` — systemd birim şablonu
+- `prs-panel.service` — pano systemd birimi
+- `deskhud-widget.service` — widget systemd birimi (çökünce yeniden başlar)
 - `install.sh` — kurulum betiği
 - `README.md`, `LICENSE`
 

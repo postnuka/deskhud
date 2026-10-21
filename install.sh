@@ -17,24 +17,18 @@ if [ ! -f config.json ]; then
   echo "config.json oluşturuldu (şehir/koordinatları düzenleyin)."
 fi
 
-# systemd --user servisi
+# systemd --user servisleri
 mkdir -p "$HOME/.config/systemd/user"
 sed "s|__PROJECT_DIR__|$DIR|g" prs-panel.service \
   > "$HOME/.config/systemd/user/prs-panel.service"
+sed "s|__PROJECT_DIR__|$DIR|g" deskhud-widget.service \
+  > "$HOME/.config/systemd/user/deskhud-widget.service"
 systemctl --user daemon-reload
 systemctl --user enable --now prs-panel
+systemctl --user enable --now deskhud-widget
 
-# Widget otomatik başlatma (GNOME)
-mkdir -p "$HOME/.config/autostart"
-cat > "$HOME/.config/autostart/prs-widget.desktop" <<EOF
-[Desktop Entry]
-Type=Application
-Name=DeskHUD Widget
-Comment=DeskHUD e-ink panel desktop widget
-Exec=/usr/bin/python3 "$DIR/widget.py"
-Terminal=false
-X-GNOME-Autostart-enabled=true
-EOF
+# Eski autostart kaydını kaldır (çift başlatmayı önle)
+rm -f "$HOME/.config/autostart/prs-widget.desktop"
 
 # Oturum kapalıyken de çalışsın (opsiyonel)
 loginctl enable-linger "$USER" 2>/dev/null || true

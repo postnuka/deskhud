@@ -122,6 +122,7 @@ class Widget(Gtk.Window):
         self.webview.set_background_color(Gdk.RGBA(1, 1, 1, 1))
         self.webview.connect("decide-policy", self.on_decide_policy)
         self.webview.connect("button-press-event", self.on_web_press)
+        self.webview.connect("key-press-event", self.on_web_key)
 
         self.handle = Gtk.EventBox()
         self.handle.modify_bg(Gtk.StateType.NORMAL, Gdk.Color(0, 0, 0))
@@ -264,6 +265,7 @@ class Widget(Gtk.Window):
         return False
 
     def on_destroy(self, *_):
+        dbg("destroy")
         try:
             x, y = self.get_position()
             save_pos(x, y)
@@ -353,21 +355,40 @@ class Widget(Gtk.Window):
         menu.append(above)
 
         item = Gtk.MenuItem(label="Kapat")
-        item.connect("activate", lambda *_: Gtk.main_quit())
+        item.connect("activate", lambda *_: self.quit_app())
         menu.append(item)
 
         menu.show_all()
         menu.popup_at_pointer(event)
 
+    def quit_app(self):
+        dbg("quit")
+        Gtk.main_quit()
+
     def on_key(self, widget, event):
-        if event.keyval in (Gdk.KEY_Escape, Gdk.KEY_q):
-            Gtk.main_quit()
+        ctrl = bool(event.state & Gdk.ModifierType.CONTROL_MASK)
+        if event.keyval == Gdk.KEY_q and ctrl:
+            self.quit_app()
+            return True
+        if event.keyval == Gdk.KEY_Escape:
+            if self.mode == "settings":
+                self.set_mode(self.prev_mode or "full")
             return True
         if event.keyval == Gdk.KEY_m:
             self.toggle_mode()
             return True
         if event.keyval == Gdk.KEY_s:
             self.open_settings()
+            return True
+        return False
+
+    def on_web_key(self, widget, event):
+        # Web içeriği odaktayken yalnızca çıkış/geri tuşlarını yakala
+        if event.keyval == Gdk.KEY_q and (event.state & Gdk.ModifierType.CONTROL_MASK):
+            self.quit_app()
+            return True
+        if event.keyval == Gdk.KEY_Escape and self.mode == "settings":
+            self.set_mode(self.prev_mode or "full")
             return True
         return False
 

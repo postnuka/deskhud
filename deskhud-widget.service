@@ -1,0 +1,14 @@
+[Unit]
+Description=DeskHUD Desktop Widget
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=__PROJECT_DIR__
+ExecStart=/usr/bin/python3 "__PROJECT_DIR__/widget.py"
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
